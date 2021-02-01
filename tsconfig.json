@@ -3,7 +3,7 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es2018",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2018"],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
@@ -19,6 +19,6 @@
     }
   },
   "include": ["./src/**/*/"],
-  "exclude": ["**/node_modules/**"],
+  "exclude": ["**/node_modules/**", "**/__tests__/**"],
   "filesGlob": ["typings.d.ts", "./src/**/*.js", "./src/**/*.ts"]
 }
