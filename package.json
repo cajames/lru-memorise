@@ -2,6 +2,13 @@
   "name": "lru-memorise",
   "version": "0.0.1",
   "description": "A simple memorise function that uses a fast LRU cache under the hood.",
+  "keywords": [
+    "memorize",
+    "memorise",
+    "memorise function",
+    "lru memorise",
+    "async memorise"
+  ],
   "main": "dist/lib.js",
   "types": "dist/lib.d.ts",
   "license": "MIT",
