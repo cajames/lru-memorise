@@ -18,7 +18,7 @@
     "url": "https://github.com/cajames/lru-memorise/issues"
   },
   "files": [
-    "./dist/*"
+    "dist/*"
   ],
   "scripts": {
     "test": "jest",
