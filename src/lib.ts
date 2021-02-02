@@ -48,13 +48,15 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     const cacheKey = cacheKeyResolver(...args);
     const cachedValue = _cache.get(cacheKey);
 
-    if (cachedValue) {
+    // If cached value, return it
+    if (cachedValue !== undefined) {
       return cachedValue;
-    } else {
-      const result = cachedFn.apply(this, args) as RESULT;
-      _cache.set(cacheKey, result);
-      return result;
     }
+
+    // No cache hit, run function and cache result
+    const result = cachedFn.apply(this, args) as RESULT;
+    _cache.set(cacheKey, result);
+    return result;
   };
 
   // Expose the cache

@@ -107,4 +107,50 @@ describe("memorise", () => {
     cachedFn("test", "the", { a: "rgs" }, 1);
     expect(keyResolver).toHaveBeenCalledWith("test", "the", { a: "rgs" }, 1);
   });
+
+  it("should cache a promise rejection", async () => {
+    const testFn = jest
+      .fn<Promise<string>, any[]>()
+      .mockRejectedValueOnce("fail1")
+      .mockRejectedValueOnce("fail2");
+
+    const cachedFn = memorise(testFn);
+
+    try {
+      await cachedFn();
+    } catch (error) {}
+
+    expect(() => cachedFn()).rejects.toMatch("fail1");
+    expect(testFn).toHaveBeenCalledTimes(1);
+    expect((cachedFn._cache as any).size).toBe(1);
+  });
+
+  it("should not cache failed functions", () => {
+    const testFn = jest.fn().mockImplementation(() => {
+      throw Error("fail1");
+    });
+    const cachedFn = memorise(testFn);
+
+    expect(() => cachedFn()).toThrow("fail1");
+    expect(() => cachedFn()).toThrow("fail1");
+    expect((cachedFn._cache as any).size).toBe(0);
+  });
+
+  it("should cache 0 and null as values", () => {
+    let testFn = jest.fn().mockReturnValue(0);
+    let cachedFn = memorise(testFn);
+    expect(cachedFn()).toBe(0);
+    expect(cachedFn()).toBe(0);
+    expect(testFn).toHaveBeenCalledTimes(1);
+
+    testFn = jest.fn().mockReturnValue(null);
+    cachedFn = memorise(testFn);
+    expect(cachedFn()).toBe(null);
+    expect(cachedFn()).toBe(null);
+    expect(testFn).toHaveBeenCalledTimes(1);
+  });
+
+  // Later features
+  xit("should not cache a promise rejection when configured not to", async () => {});
+  xit("should cache an error when configured to", async () => {});
 });
