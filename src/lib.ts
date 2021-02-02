@@ -45,7 +45,7 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
 
   // Cached fn
   const returnFn = (...args: ARGS): RESULT => {
-    const cacheKey = cacheKeyResolver(args);
+    const cacheKey = cacheKeyResolver(...args);
     const cachedValue = _cache.get(cacheKey);
 
     if (cachedValue) {
@@ -69,6 +69,6 @@ export default memorise;
  * Generic args handler function.
  * @param args Argument array
  */
-const defaultGenCacheKey = (args: any[]) => {
+const defaultGenCacheKey = (...args: any[]) => {
   return args.map((val) => JSON.stringify(val)).join("/");
 };

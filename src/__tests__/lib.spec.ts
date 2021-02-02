@@ -97,4 +97,14 @@ describe("memorise", () => {
     cachedFn("test");
     expect(cachedFn._cache.keys()).toMatchObject(["test-key"]);
   });
+
+  it("should pass arguments correctly to the key function", () => {
+    const testFn = jest.fn<number, any[]>().mockReturnValue(42);
+    const keyResolver = jest.fn().mockReturnValue("test-result");
+    const cachedFn = memorise(testFn, {
+      cacheKeyResolver: keyResolver,
+    });
+    cachedFn("test", "the", { a: "rgs" }, 1);
+    expect(keyResolver).toHaveBeenCalledWith("test", "the", { a: "rgs" }, 1);
+  });
 });
