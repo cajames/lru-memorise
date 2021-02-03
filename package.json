@@ -21,7 +21,7 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "rm -r -f ./dist &&  tsc",
     "release": "yarn build && np"
   },
