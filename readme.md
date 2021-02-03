@@ -1,5 +1,8 @@
 # LRU Memorise Fn
 
+![Build](https://github.com/cajames/lru-memorise/workflows/Build%20and%20Test/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/cajames/lru-memorise/badge.svg?branch=master)](https://coveralls.io/github/cajames/lru-memorise?branch=master)
+
 > A simple memorise function that uses a fast LRU cache under the hood.
 
 ## Basic features
