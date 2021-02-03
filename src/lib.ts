@@ -15,8 +15,27 @@ export interface MemorisedOptions<
   T extends any = any,
   ARGS extends any[] = any[]
 > {
-  cache?: Lru<T>;
+  /**
+   * Optional cache passed in.
+   */
+  cache?: any;
+  /**
+   * Cache Key resolver based on arguments to function
+   */
   cacheKeyResolver?: (...args: ARGS) => string;
+  /**
+   * Optional callback called when a cache value is hit.
+   *
+   * @param cacheKey The key that was hit
+   * @param value The value that was returned by the cache
+   * @param cache The cache
+   */
+  onHit?: (cacheKey: string, value: T, cache: Lru<T>) => void;
+
+  /**
+   * Options passed to internal `tiny-lru` cache that will be created.
+   * Not used if `cache` is passed in.
+   */
   lruOptions?: LRUOptions;
 }
 
@@ -36,6 +55,7 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
   const {
     cache,
     cacheKeyResolver = defaultGenCacheKey,
+    onHit,
     lruOptions = {
       max: 1000,
     },
@@ -50,6 +70,10 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
 
     // If cached value, return it
     if (cachedValue !== undefined) {
+      // If onHit handler is there, run it
+      if (onHit) {
+        onHit(cacheKey, cachedValue, _cache);
+      }
       return cachedValue;
     }
 
