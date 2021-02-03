@@ -150,6 +150,23 @@ describe("memorise", () => {
     expect(testFn).toHaveBeenCalledTimes(1);
   });
 
+  it("should call the onHit handler if passed in", () => {
+    const testFn = jest.fn().mockReturnValue("success");
+    const onHitFn = jest.fn();
+    const cachedFn = memorise(testFn, {
+      onHit: onHitFn,
+    });
+
+    cachedFn();
+    expect(testFn).toHaveBeenCalledTimes(1);
+    expect(onHitFn).toHaveBeenCalledTimes(0);
+
+    cachedFn();
+    expect(testFn).toHaveBeenCalledTimes(1);
+    expect(onHitFn).toHaveBeenCalledTimes(1);
+    expect(onHitFn).toHaveBeenCalledWith("", "success", cachedFn._cache);
+  });
+
   // Later features
   xit("should not cache a promise rejection when configured not to", async () => {});
   xit("should cache an error when configured to", async () => {});
