@@ -105,5 +105,30 @@ const defaultGenCacheKey = (...args: any[]) => {
   if (args.length === 0) {
     return "no-args";
   }
-  return args.map((val) => JSON.stringify(val)).join("/");
+  return args
+    .map((val) => {
+      if (val === undefined) {
+        return "undefined";
+      }
+      if (val === null) {
+        return "null";
+      }
+      if (Array.isArray(val)) {
+        return `[${defaultGenCacheKey(...val)}]`;
+      }
+      if (typeof val === "object") {
+        return `{${defaultGenCacheKey(...sortedObjectEntries(val))}}`;
+      }
+      return JSON.stringify(val);
+    })
+    .join(",");
+};
+
+const sortedObjectEntries = (obj: any) => {
+  return Object.entries(obj).sort((a, b) => {
+    if (a[0] < b[0]) {
+      return -1;
+    }
+    return 1;
+  });
 };
