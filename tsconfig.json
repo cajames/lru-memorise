@@ -5,7 +5,6 @@
     "target": "es2018",
     "lib": ["es2018"],
     "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "sourceMap": true,

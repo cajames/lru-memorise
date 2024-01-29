@@ -1,4 +1,4 @@
-import LRU, { Lru } from "tiny-lru";
+import { LRU, lru } from "tiny-lru";
 export interface LRUOptions {
   /**
    * Max number of items in LRU cache
@@ -30,7 +30,7 @@ export interface MemorisedOptions<
    * @param value The value that was returned by the cache
    * @param cache The cache
    */
-  onHit?: (cacheKey: string, value: T, cache: Lru<T>) => void;
+  onHit?: (cacheKey: string, value: T, cache: LRU<T>) => void;
 
   /**
    * Options passed to internal `tiny-lru` cache that will be created.
@@ -38,6 +38,10 @@ export interface MemorisedOptions<
    */
   lruOptions?: LRUOptions;
 }
+
+const defaultLRUOptions: LRUOptions = {
+  max: 1000,
+};
 
 /**
  * Returns a memorised version of the target function.
@@ -56,9 +60,7 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     cache,
     cacheKeyResolver = defaultGenCacheKey,
     onHit,
-    lruOptions = {
-      max: 1000,
-    },
+    lruOptions = {},
   } = options;
 
   const _cache = cache || (LRU(lruOptions.max, lruOptions.ttl) as Lru<RESULT>);
@@ -67,9 +69,10 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
   const returnFn = (...args: ARGS): RESULT => {
     const cacheKey = cacheKeyResolver(...args);
     const cachedValue = _cache.get(cacheKey);
+    const keyCached = _cache.has(cacheKey);
 
-    // If cached value, return it
-    if (cachedValue !== undefined) {
+    // Use cached key, even if value is void
+    if (keyCached) {
       // If onHit handler is there, run it
       if (onHit) {
         onHit(cacheKey, cachedValue, _cache);
@@ -96,5 +99,8 @@ export default memorise;
  * @param args Argument array
  */
 const defaultGenCacheKey = (...args: any[]) => {
+  if (args.length === 0) {
+    return "no-args";
+  }
   return args.map((val) => JSON.stringify(val)).join("/");
 };

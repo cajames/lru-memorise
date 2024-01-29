@@ -164,7 +164,27 @@ describe("memorise", () => {
     cachedFn();
     expect(testFn).toHaveBeenCalledTimes(1);
     expect(onHitFn).toHaveBeenCalledTimes(1);
-    expect(onHitFn).toHaveBeenCalledWith("", "success", cachedFn._cache);
+    expect(onHitFn).toHaveBeenCalledWith("no-args", "success", cachedFn._cache);
+  });
+
+  it('should treat passing in "undefined" and passing no arguments as different', () => {
+    const testFn = jest.fn().mockReturnValue("success");
+    const cachedFn = memorise(testFn);
+
+    cachedFn();
+    expect(testFn).toHaveBeenCalledTimes(1);
+    cachedFn(undefined);
+    expect(testFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should cache functions returning void/undefined", () => {
+    function voidFn() {}
+    const testFn = jest.fn().mockImplementation(voidFn);
+    const cachedFn = memorise(testFn);
+    cachedFn();
+    expect(testFn).toHaveBeenCalledTimes(1);
+    cachedFn();
+    expect(testFn).toHaveBeenCalledTimes(1);
   });
 
   // Later features
