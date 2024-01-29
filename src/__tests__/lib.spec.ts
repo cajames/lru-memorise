@@ -187,6 +187,45 @@ describe("memorise", () => {
     expect(testFn).toHaveBeenCalledTimes(1);
   });
 
+  it("should treat undefined and null differently", () => {
+    const testFn = jest.fn();
+    const cachedFn = memorise(testFn);
+    cachedFn([undefined]);
+    cachedFn([null]);
+    expect(testFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should treat object with undefined values different to no keys at all", () => {
+    const testFn = jest.fn();
+    const cachedFn = memorise(testFn);
+    cachedFn({ a: undefined });
+    cachedFn({});
+    expect(testFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should support nested structures", () => {
+    const testFn = jest.fn();
+    const cachedFn = memorise(testFn);
+    cachedFn({ a: undefined });
+    cachedFn({});
+    expect(testFn).toHaveBeenCalledTimes(2);
+  });
+
+  it("should treat objects with same key,values equally, regardless of order", () => {
+    const testFn = jest.fn();
+    const cachedFn = memorise(testFn);
+    cachedFn({ a: 1, b: 2 });
+    cachedFn({ b: 2, a: 1 });
+    expect(testFn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should treat single values and arrays differently", () => {
+    const testFn = jest.fn();
+    const cachedFn = memorise(testFn);
+    cachedFn(1);
+    cachedFn([1]);
+    expect(testFn).toHaveBeenCalledTimes(2);
+  });
   // Later features
   xit("should not cache a promise rejection when configured not to", async () => {});
   xit("should cache an error when configured to", async () => {});
