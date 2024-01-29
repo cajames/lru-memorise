@@ -63,7 +63,10 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     lruOptions = {},
   } = options;
 
-  const _cache = cache || (LRU(lruOptions.max, lruOptions.ttl) as Lru<RESULT>);
+  const cacheOptions = { ...defaultLRUOptions, ...lruOptions };
+
+  const _cache = (cache ||
+    lru(cacheOptions.max, cacheOptions.ttl)) as LRU<RESULT>;
 
   // Cached fn
   const returnFn = (...args: ARGS): RESULT => {
