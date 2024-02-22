@@ -69,14 +69,12 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     lru(cacheOptions.max, cacheOptions.ttl)) as LRU<RESULT>;
 
   // Cached fn
-  const returnFn = (...args: ARGS): RESULT => {
+  function returnFn(...args: ARGS): RESULT {
     const cacheKey = cacheKeyResolver(...args);
     const cachedValue = _cache.get(cacheKey);
     const keyCached = _cache.has(cacheKey);
 
-    // Use cached key, even if value is void
     if (keyCached) {
-      // If onHit handler is there, run it
       if (onHit) {
         onHit(cacheKey, cachedValue, _cache);
       }
@@ -87,7 +85,7 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     const result = cachedFn.apply(this, args) as RESULT;
     _cache.set(cacheKey, result);
     return result;
-  };
+  }
 
   // Expose the cache
   returnFn._cache = _cache;
