@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es2018",
-    "lib": ["es2018"],
+    "module": "esnext",
+    "target": "ESNext",
+    "lib": ["ESNext"],
     "noImplicitAny": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
