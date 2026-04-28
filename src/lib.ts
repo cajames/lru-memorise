@@ -69,9 +69,9 @@ export const memorise = <RESULT extends any = any, ARGS extends any[] = any[]>(
     lru(cacheOptions.max, cacheOptions.ttl)) as LRU<RESULT>;
 
   // Cached fn
-  function returnFn(...args: ARGS): RESULT {
+  function returnFn(this: any, ...args: ARGS): RESULT {
     const cacheKey = cacheKeyResolver(...args);
-    const cachedValue = _cache.get(cacheKey);
+    const cachedValue = _cache.get(cacheKey) as RESULT;
     const keyCached = _cache.has(cacheKey);
 
     if (keyCached) {
